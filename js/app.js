@@ -124,7 +124,7 @@ const log = debug ? console.log.bind(console, '[App]') : () => {};
       await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile));
       progressFill.style.width = '25%';
 
-      const args = [];
+      const args = ['-y', '-an'];
       if (startT > 0) args.push('-ss', String(startT));
       args.push('-i', 'input.mp4');
       if (endT) args.push('-t', String(endT - startT));
@@ -137,7 +137,8 @@ const log = debug ? console.log.bind(console, '[App]') : () => {};
       progressLabel.textContent = 'Extracting frames…';
       progressFill.style.width = '40%';
       log('FFmpeg exec args:', args);
-      await ffmpeg.exec(args);
+      log('Starting exec with 120s timeout...');
+      await ffmpeg.exec(args, 120000);
       log('FFmpeg exec completed');
       progressFill.style.width = '70%';
 
