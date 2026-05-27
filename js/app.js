@@ -223,7 +223,7 @@ const log = debug ? console.log.bind(console, '[App]') : () => {};
     try {
       if (!window.JSZip) {
         Toast.info('Loading JSZip library…', 'Please wait');
-        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+        await loadScript('/js/jszip.min.js');
       }
       const zip = new JSZip();
       for (const f of frames) {

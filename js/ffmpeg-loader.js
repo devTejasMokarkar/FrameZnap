@@ -35,17 +35,24 @@ const FrameSnapFFmpeg = (function () {
 
         instance.on('error', ({ message }) => {
           console.error('[FFmpeg::error]', message);
+          log('FFmpeg error event:', message);
         });
 
-        const baseURL = window.location.origin + '/';
-        log('Loading FFmpeg core...');
-        log('coreURL:', baseURL + 'js/ffmpeg-core.js');
-        log('wasmURL:', baseURL + 'js/ffmpeg-core.wasm');
+        const base = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd';
+        log('Loading FFmpeg core via toBlobURL...');
+        log('CDN base:', base);
 
-        await instance.load({
-          coreURL: baseURL + 'js/ffmpeg-core.js',
-          wasmURL: baseURL + 'js/ffmpeg-core.wasm',
-        });
+        const coreURL = await FFmpegUtil.toBlobURL(
+          base + '/ffmpeg-core.js', 'text/javascript'
+        );
+        const wasmURL = await FFmpegUtil.toBlobURL(
+          base + '/ffmpeg-core.wasm', 'application/wasm'
+        );
+
+        log('coreURL (blob):', coreURL);
+        log('wasmURL (blob):', wasmURL);
+
+        await instance.load({ coreURL, wasmURL });
 
         log('FFmpeg loaded successfully');
         ffmpeg = instance;
