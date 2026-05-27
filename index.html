@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ========== PRIMARY SEO ========== -->
+<title>Free Video to JPG Converter Online – Extract Frames as JPEG Images</title>
+<meta name="description" content="Free online Video to JPG converter. Extract frames from MP4, MOV, AVI, MKV, WebM as JPEG images. No upload needed – runs 100% in your browser. Download as ZIP archive.">
+<meta name="keywords" content="video to jpg converter, video to jpeg, extract frames from video, video frame extractor, mp4 to jpg, video screenshot, free video converter online, video to image sequence, ezgif alternative">
+<meta name="robots" content="index, follow">
+<meta name="author" content="FrameSnap">
+<link rel="canonical" href="https://frameznap.vercel.app/">
+
+<!-- ========== OPEN GRAPH ========== -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://frameznap.vercel.app/">
+<meta property="og:title" content="Free Video to JPG Converter – Extract Frames Online">
+<meta property="og:description" content="Convert any video to JPG image sequence directly in your browser. No upload to server, 100% private. Supports MP4, MOV, AVI, MKV, WebM and more.">
+<meta property="og:image" content="https://frameznap.vercel.app/og-image.png">
+<meta property="og:site_name" content="FrameSnap">
+<meta property="og:locale" content="en_US">
+
+<!-- ========== TWITTER CARD ========== -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Video to JPG Converter – Extract Frames Online">
+<meta name="twitter:description" content="Extract frames from any video as JPG images. Runs in browser, no upload required. Free and unlimited.">
+<meta name="twitter:image" content="https://frameznap.vercel.app/og-image.png">
+
+<!-- ========== SCHEMA.ORG JSON-LD ========== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "FrameSnap – Video to JPG Converter",
+  "url": "https://frameznap.vercel.app/",
+  "description": "Free online tool to extract frames from any video as JPG image sequences. Runs entirely in your browser – no server upload needed.",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any (Browser-based)",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "Convert MP4, MOV, AVI, MKV, WebM, FLV and more to JPG frames",
+    "Runs 100% in browser – no server upload",
+    "Adjustable frame rate (1-30 FPS)",
+    "Download all frames as ZIP",
+    "Trim to specific time range",
+    "Adjustable output resolution"
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <a class="logo" href="/"><span>Frame</span>Snap</a>
+  <nav>
+    <a href="#how-it-works">How it works</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Free Video to JPG Converter</h1>
+  <p class="subtitle">
+    Extract frames from any video as JPG images — runs 100% in your browser.
+    No upload to server, completely private, unlimited and free.
+    <span class="badge badge-green" style="vertical-align:middle;margin-left:6px">🔒 No upload needed</span>
+  </p>
+
+  <!-- === UPLOAD CARD === -->
+  <div class="upload-card">
+    <div class="drop-zone" id="dropZone">
+      <input type="file" id="fileInput" accept="video/*">
+      <div class="upload-icon">🎬</div>
+      <h2>Drop your video here</h2>
+      <p>MP4, MOV, AVI, MKV, WebM, FLV, OGG, M4V and more &mdash; max 2GB</p>
+      <button class="btn-primary" type="button" onclick="document.getElementById('fileInput').click()">Choose Video File</button>
+    </div>
+
+    <div id="videoPreviewWrap">
+      <video id="videoEl" controls></video>
+      <div class="file-info" id="fileInfo"></div>
+    </div>
+
+    <div class="options-grid">
+      <div class="opt-group">
+        <label>Frames per second (FPS)</label>
+        <select id="fpsSelect">
+          <option value="1">1 FPS</option>
+          <option value="2">2 FPS</option>
+          <option value="5" selected>5 FPS</option>
+          <option value="10">10 FPS</option>
+          <option value="15">15 FPS</option>
+          <option value="24">24 FPS</option>
+          <option value="30">30 FPS</option>
+        </select>
+      </div>
+      <div class="opt-group">
+        <label>Max width (px)</label>
+        <select id="widthSelect">
+          <option value="">Original</option>
+          <option value="480">480px</option>
+          <option value="720">720px</option>
+          <option value="1080" selected>1080px</option>
+          <option value="1920">1920px (Full HD)</option>
+        </select>
+      </div>
+      <div class="opt-group">
+        <label>Start time (seconds)</label>
+        <input type="number" id="startTime" value="0" min="0" step="0.1" placeholder="0">
+      </div>
+      <div class="opt-group">
+        <label>End time (seconds)</label>
+        <input type="number" id="endTime" value="" min="0" step="0.1" placeholder="Full duration">
+      </div>
+      <div class="opt-group">
+        <label>JPEG quality</label>
+        <select id="qualitySelect">
+          <option value="2">Best quality</option>
+          <option value="4" selected>High quality</option>
+          <option value="8">Medium quality</option>
+          <option value="16">Smaller files</option>
+        </select>
+      </div>
+      <div class="opt-group" style="display:flex;align-items:flex-end;">
+        <button class="btn-primary" id="convertBtn" disabled onclick="startConversion()" style="width:100%;padding:0.7rem 1rem;font-size:0.95rem;">
+          ▶ Convert to JPG
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- === PROGRESS === -->
+  <div id="progressWrap">
+    <div class="progress-label" id="progressLabel">Loading FFmpeg…</div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <!-- === RESULTS === -->
+  <div id="resultsWrap">
+    <div class="results-header">
+      <h3 id="resultCount"></h3>
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+        <button class="btn-outline" onclick="downloadAll()">⬇ Download ZIP</button>
+        <button class="btn-outline" onclick="resetTool()" style="border-color:var(--muted);color:var(--muted);">✕ Reset</button>
+      </div>
+    </div>
+    <div class="frames-grid" id="framesGrid"></div>
+  </div>
+
+  <!-- === HOW IT WORKS === -->
+  <section id="how-it-works" class="features-section" aria-labelledby="how-heading">
+    <h2 id="how-heading" style="grid-column:1/-1;font-size:1.2rem;font-weight:700;margin-bottom:0">How It Works</h2>
+    <div class="feature-card">
+      <div class="feature-icon">📁</div>
+      <h3>1. Choose your video</h3>
+      <p>Drop any video file — MP4, MOV, AVI, MKV, WebM and more. Nothing leaves your device.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚙️</div>
+      <h3>2. Set your options</h3>
+      <p>Pick frame rate, resolution, time range and JPEG quality. Fine-tune for your use case.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🖼️</div>
+      <h3>3. Get your frames</h3>
+      <p>All frames appear instantly in the preview. Download individually or as a ZIP archive.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h3>100% private</h3>
+      <p>Powered by FFmpeg.wasm — everything runs locally in your browser. No server upload ever.</p>
+    </div>
+  </section>
+
+  <!-- === SUPPORTED FORMATS === -->
+  <section class="formats-section" aria-label="Supported video formats">
+    <h2>Supported Video Formats</h2>
+    <div class="format-pills">
+      <span class="format-pill">MP4</span>
+      <span class="format-pill">MOV</span>
+      <span class="format-pill">AVI</span>
+      <span class="format-pill">MKV</span>
+      <span class="format-pill">WebM</span>
+      <span class="format-pill">FLV</span>
+      <span class="format-pill">OGG</span>
+      <span class="format-pill">M4V</span>
+      <span class="format-pill">WMV</span>
+      <span class="format-pill">3GP</span>
+      <span class="format-pill">MPEG</span>
+      <span class="format-pill">TS</span>
+      <span class="format-pill">MTS</span>
+      <span class="format-pill">VOB</span>
+    </div>
+  </section>
+
+  <!-- === FAQ === -->
+  <section id="faq" class="faq-section" aria-labelledby="faq-heading">
+    <h2 id="faq-heading">Frequently Asked Questions</h2>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Is this tool really free to use? <span>+</span>
+      </button>
+      <div class="faq-a">Yes, FrameSnap is completely free with no limits. You can convert as many videos and extract as many frames as you want at no cost.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Do you store my video files? <span>+</span>
+      </button>
+      <div class="faq-a">No. Your files never leave your device. The entire conversion is powered by FFmpeg.wasm running locally in your browser. No server upload happens at any point.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        What frame rate should I choose? <span>+</span>
+      </button>
+      <div class="faq-a">For general use, 1–5 FPS is usually enough and produces fewer files. For smooth motion analysis or creating short GIFs, use 10–30 FPS. Higher FPS means more images and longer processing time.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        What is the maximum video file size? <span>+</span>
+      </button>
+      <div class="faq-a">There is no strict server-side limit since everything runs locally. Practical limits depend on your device's RAM — most modern computers handle files up to 2GB without issues.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Can I extract just part of the video? <span>+</span>
+      </button>
+      <div class="faq-a">Yes! Use the Start Time and End Time fields to trim the extraction to any time range you need. Times are in seconds (e.g. 10.5 for 10 seconds and 500 milliseconds).</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Is FrameSnap a free alternative to EZGif? <span>+</span>
+      </button>
+      <div class="faq-a">Yes! FrameSnap offers the same core functionality as EZGif's video-to-JPG tool, with the added advantage that it runs entirely in your browser — your video files are never uploaded anywhere.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Can I use this on mobile (iPhone/Android)? <span>+</span>
+      </button>
+      <div class="faq-a">Yes, FrameSnap works on modern mobile browsers. Performance may be slower on mobile devices due to the processing-intensive nature of video decoding, but smaller files should work fine.</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p style="margin-bottom:0.3rem"><strong>FrameSnap</strong> — Free Video to JPG Frame Extractor</p>
+  <p>
+    <a href="/privacy">Privacy Policy</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+  </p>
+  <p style="margin-top:0.5rem;font-size:0.75rem">All processing happens in your browser. No data is uploaded to any server.</p>
+</footer>
+
+<!-- FFmpeg.wasm core -->
+<script src="js/ffmpeg/ffmpeg.js"></script>
+<script src="js/index.js"></script>
+
+<!-- Application modules -->
+<script src="js/toast.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/ffmpeg-loader.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
